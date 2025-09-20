@@ -1,0 +1,51 @@
+{
+  "name": "mulmocast-mcp",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    }
+  },
+  "bin": {
+    "mulmocast-mcp": "lib/cli/bin.js"
+  },
+  "files": [
+    "./lib"
+  ],
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "NODE_ENV=test tsx --test  --experimental-test-coverage ./test/*/test_*.ts",
+    "lint": "eslint src test",
+    "build": "tsc",
+    "cli": "npx tsx ./src/cli/bin.ts"
+  },
+  "repository": "git+ssh://git@github.com/receptron/mulmocast-mcp.git",
+  "author": "receptron team",
+  "license": "AGPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/receptron/mulmocast-mcp/issues"
+  },
+  "homepage": "https://github.com/receptron/mulmocast-mcp#readme",
+  "dependencies": {
+    "mulmocast": "^1.2.36"
+  },
+  "devDependencies": {
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-sonarjs": "^3.0.5",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.44.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
