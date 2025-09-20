@@ -223,7 +223,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
 
 // Start the server
 async function main() {
-  const logger = (level: string,  ...args: any[]) => {
+  const logger = (level: string, ...args: any[]) => {
     console.error(...args);
   };
   GraphAILogger.setLogger(logger);

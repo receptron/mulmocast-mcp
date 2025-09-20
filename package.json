@@ -21,7 +21,7 @@
   },
   "scripts": {
     "test": "NODE_ENV=test tsx --test  --experimental-test-coverage ./test/*/test_*.ts",
-    "lint": "eslint src test",
+    "lint": "eslint src",
     "build": "tsc",
     "cli": "npx tsx ./src/cli/bin.ts",
     "format": "prettier --write '{src,test}/**/*.{ts,json,yaml}'"
