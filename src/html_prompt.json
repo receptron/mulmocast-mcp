@@ -1,0 +1,60 @@
+{
+  "type": "object",
+  "properties": {
+    "$mulmocast": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1.0"
+        }
+      },
+      "required": ["version"],
+      "additionalProperties": false
+    },
+    "canvasSize": {
+      "type": "object",
+      "properties": {
+        "width": { "type": "number" },
+        "height": { "type": "number" }
+      },
+      "required": ["width", "height"],
+      "additionalProperties": false,
+      "default": { "width": 1280, "height": 720 }
+    },
+    "htmlImageParams": {
+      "type": "object",
+      "properties": {
+        "provider": { "enum": ["anthropic"] }
+      },
+      "required": ["provider"],
+      "additionalProperties": false,
+      "default": { "provider": "anthropic" }
+    },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "lang": { "type": "string" },
+    "beats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string", "default": "" },
+          "htmlPrompt": {
+            "type": "object",
+            "properties": {
+              "prompt": { "type": "string" }
+            },
+            "required": ["prompt"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["text", "htmlPrompt"],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": ["$mulmocast", "beats"],
+  "additionalProperties": false
+}

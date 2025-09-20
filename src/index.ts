@@ -6,6 +6,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { CallToolRequestSchema, CallToolRequest, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import fs from "fs";
 import path from "path";
+import os from "os";
 import { fileURLToPath } from "url";
 import { GraphAILogger } from "graphai";
 import {
@@ -14,7 +15,8 @@ import {
   movie,
   captions,
   pdf,
-  initializeContext,
+  getFileObject,
+  initializeContextFromFiles,
   runTranslateIfNeeded,
   outDirName,
   resolveDirPath,
@@ -44,15 +46,37 @@ const server = new Server(
   },
 );
 
+export const formattedDate = () => {
+  const now = new Date();
+
+  const formatted = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+    String(now.getHours()).padStart(2, "0"),
+    String(now.getMinutes()).padStart(2, "0"),
+    String(now.getSeconds()).padStart(2, "0"),
+  ].join("-");
+  return formatted;
+};
+
+export const getBaseDir = () => {
+  return path.join(os.homedir(), "Documents", "mulmocast");
+};
+export const getOutDir = () => {
+  return path.join(getBaseDir(), formattedDate());
+};
+
 // Helper function to save MulmoScript content to output directory
 const saveMulmoScriptToOutput = async (mulmoScript: MulmoScript): Promise<string> => {
-  const baseDirPath = process.cwd();
-  const outputDirPath = path.resolve(baseDirPath, outDirName);
+  const outputDirPath = path.resolve(getOutDir(), outDirName);
 
   // Create timestamp-based filename similar to __clipboard handling
   const fileName = generateTimestampedFileName("mcp_script");
 
   // Ensure output directory exists
+
+  // GraphAILogger.error(outputDirPath);
   mkdir(outputDirPath);
 
   // Save MulmoScript to file
@@ -133,20 +157,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
     const filePath = await saveMulmoScriptToOutput(validatedScript);
 
     // Create argv-like object for CLI compatibility
-    const argv = {
+    const files = getFileObject({
+      basedir: getBaseDir(),
+      outdir: getOutDir(),
+      //imagedir?: string;
+      // audiodir?: string;
+      // presentationStyle?: string;
       file: filePath,
-      l: options.lang,
-      c: options.caption,
-      f: options.force || false,
-      v: options.verbose || false,
-      pdf_mode: options.pdfMode || "handout",
-      pdf_size: options.pdfSize || "Letter",
-      _: [],
-      $0: "mcp-server",
-    };
+    });
 
     // Initialize context using the saved file
-    const context = await initializeContext(argv);
+    // const context = await initializeContext(argv);
+    const context = await initializeContextFromFiles(files, false, options.force || false, options.caption, options.lang);
+
     if (!context) {
       throw new Error("Failed to initialize context from MulmoScript");
     }
