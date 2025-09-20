@@ -223,6 +223,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
 
 // Start the server
 async function main() {
+  const logger = (level: string,  ...args: any[]) => {
+    console.error(...args);
+  };
+  GraphAILogger.setLogger(logger);
   const transport = new StdioServerTransport();
   await server.connect(transport);
   GraphAILogger.error("MulmoCast MCP Server running on stdio");
