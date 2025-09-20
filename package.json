@@ -1,6 +1,6 @@
 {
   "name": "mulmocast-mcp",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "type": "module",
   "main": "lib/index.js",
@@ -23,7 +23,8 @@
     "test": "NODE_ENV=test tsx --test  --experimental-test-coverage ./test/*/test_*.ts",
     "lint": "eslint src test",
     "build": "tsc",
-    "cli": "npx tsx ./src/cli/bin.ts"
+    "cli": "npx tsx ./src/cli/bin.ts",
+    "format": "prettier --write '{src,test}/**/*.{ts,json,yaml}'"
   },
   "repository": "git+ssh://git@github.com/receptron/mulmocast-mcp.git",
   "author": "receptron team",
@@ -33,6 +34,8 @@
   },
   "homepage": "https://github.com/receptron/mulmocast-mcp#readme",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.1",
+    "dotenv": "^17.2.2",
     "mulmocast": "^1.2.36"
   },
   "devDependencies": {
