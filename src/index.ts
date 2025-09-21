@@ -96,14 +96,14 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: "generate",
-        description: "Generate movie or PDF from MulmoScript content",
+        description: "Generate movie, image, audio, html from MulmoScript content",
         inputSchema: {
           type: "object",
           properties: {
             cmd: {
               type: "string",
-              enum: ["audio", "image", "movie", "pdf", "html"],
-              description: "Command to execute: 'movie' to generate video, 'pdf' to generate PDF",
+              enum: ["audio", "image", "movie", "html"],
+              description: "Command to execute: 'movie' to generate video, 'image' to generate Image",
             },
             mulmoScript: MULMO_SCRIPT_JSON_SCHEMA,
             options: {
@@ -196,7 +196,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
     } else if (cmd === "html") {
       await images(context).then((imageContext) => html(imageContext));
     } else {
-      throw new Error(`Unknown command: ${cmd}. Supported commands: audio, image, movie, pdf, html `);
+      throw new Error(`Unknown command: ${cmd}. Supported commands: audio, image, movie, html `);
     }
 
     return {
