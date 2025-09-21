@@ -15,6 +15,7 @@ import {
   movie,
   captions,
   pdf,
+  html,
   getFileObject,
   initializeContextFromFiles,
   runTranslateIfNeeded,
@@ -24,6 +25,7 @@ import {
   generateTimestampedFileName,
   MulmoScriptMethods,
   type MulmoScript,
+  updateNpmRoot,
 } from "mulmocast";
 
 // Load MulmoScript JSON Schema from file
@@ -33,6 +35,8 @@ dotenv.config({ quiet: true });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+updateNpmRoot(path.resolve(__dirname, "../node_modules/mulmocast"));
 
 const server = new Server(
   {
@@ -98,7 +102,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             cmd: {
               type: "string",
-              enum: ["movie", "pdf"],
+              enum: ["audio", "image", "movie", "pdf", "html"],
               description: "Command to execute: 'movie' to generate video, 'pdf' to generate PDF",
             },
             mulmoScript: MULMO_SCRIPT_JSON_SCHEMA,
@@ -138,7 +142,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
       mulmoScript,
       options = {},
     } = args as {
-      cmd: "movie" | "pdf";
+      cmd: "movie" | "pdf" | "html" | "audio" | "image";
       mulmoScript: MulmoScript;
       options?: {
         pdfMode?: string;
@@ -178,35 +182,31 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
     await runTranslateIfNeeded(context);
 
     // Execute the requested command
-    switch (cmd) {
-      case "movie":
-        // Generate movie (audio + images + captions + movie)
-        await audio(context).then(images).then(captions).then(movie);
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Movie generated successfully from MulmoScript. Output saved to: ${context.fileDirs.outDirPath}`,
-            },
-          ],
-        };
-
-      case "pdf":
-        // Generate images first, then PDF
-        await images(context);
-        await pdf(context, options.pdfMode || "handout", options.pdfSize || "Letter");
-        return {
-          content: [
-            {
-              type: "text",
-              text: `PDF generated successfully from MulmoScript. Output saved to: ${context.fileDirs.outDirPath}`,
-            },
-          ],
-        };
-
-      default:
-        throw new Error(`Unknown command: ${cmd}. Supported commands: movie, pdf`);
+    // enum: ["audio", "image", "movie", "pdf", "html"],
+    if (cmd === "audio") {
+      await audio(context);
+    } else if (cmd === "image") {
+      await images(context);
+    } else if (cmd === "movie") {
+      // Generate movie (audio + images + captions + movie)
+      await audio(context).then(images).then(captions).then(movie);
+    } else if (cmd === "pdf") {
+      // Generate images first, then PDF
+      await images(context).then((imageContext) => pdf(imageContext, options.pdfMode || "handout", options.pdfSize || "Letter"));
+    } else if (cmd === "html") {
+      await images(context).then((imageContext) => html(imageContext));
+    } else {
+      throw new Error(`Unknown command: ${cmd}. Supported commands: audio, image, movie, pdf, html `);
     }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `${cmd} generated successfully from MulmoScript. Output saved to: ${context?.fileDirs.outDirPath}`,
+        },
+      ],
+    };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     return {
