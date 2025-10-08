@@ -1,6 +1,6 @@
 {
   "name": "mulmocast-mcp",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "",
   "type": "module",
   "main": "lib/index.js",
