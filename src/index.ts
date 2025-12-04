@@ -172,7 +172,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
 
     // Initialize context using the saved file
     // const context = await initializeContext(argv);
-    const context = await initializeContextFromFiles(files, false, options.force || false, options.caption, options.lang);
+    const context = await initializeContextFromFiles(files, false, options.force || false, false, options.caption, options.lang);
 
     if (!context) {
       throw new Error("Failed to initialize context from MulmoScript");
@@ -223,7 +223,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
 
 // Start the server
 async function main() {
-  const logger = (level: string, ...args: any[]) => {
+  const logger = (level: string, ...args: unknown[]) => {
     console.error(...args);
   };
   GraphAILogger.setLogger(logger);
