@@ -34,19 +34,21 @@
   },
   "homepage": "https://github.com/receptron/mulmocast-mcp#readme",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.24.2",
-    "dotenv": "^17.2.3",
-    "mulmocast": "^2.0.8"
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "dotenv": "^17.2.4",
+    "mulmocast": "^2.1.35"
   },
   "devDependencies": {
-    "eslint": "^9.39.1",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-sonarjs": "^3.0.5",
-    "prettier": "^3.7.4",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-sonarjs": "^3.0.6",
+    "globals": "^17.3.0",
+    "prettier": "^3.8.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.1"
+    "typescript-eslint": "^8.54.0"
   },
   "engines": {
     "node": ">=20.0.0"
