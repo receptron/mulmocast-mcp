@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/mulmocast-mcp.svg)](https://badge.fury.io/js/mulmocast-mcp)
 # mulmocast-mcp
 
 
